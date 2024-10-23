@@ -24,4 +24,18 @@ class httpHelper {
       return [];
     }
   }
+
+  Future<List<Movie>> searchMovies(String query) async {
+    final url = "$urlBase$urlUpcoming$apiKey$language&query=$query";
+    http.Response result = await http.get(Uri.parse(url));
+
+    if (result.statusCode == 200) {
+      final Map<String, dynamic> jsonResponse = json.decode(result.body);
+      final List moviesMap = jsonResponse['results'];
+      List<Movie> movies = moviesMap.map((json) => Movie.fromJson(json)).toList();
+      return movies;
+    } else {
+      return [];
+    }
+  }
 }

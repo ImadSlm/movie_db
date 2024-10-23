@@ -1,4 +1,7 @@
 abstract class MovieEvent {}
 
-class FecthUpcomingMovies extends MovieEvent {}
-class SearchMovies extends MovieEvent {}
+class FetchUpcomingMovies extends MovieEvent {}
+class SearchMovies extends MovieEvent {
+  final String query;
+  SearchMovies(this.query);
+}
