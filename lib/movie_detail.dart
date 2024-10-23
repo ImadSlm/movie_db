@@ -9,16 +9,24 @@ class MovieDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(movie.title),
+        backgroundColor: Colors.amber,
+        title: Text(
+          movie.title,
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(
-              movie.posterPath,
-              height: 500,
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Image.network(
+                movie.posterPath,
+                height: 500,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(24.0),
