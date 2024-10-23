@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:movie_api_demo/http_helper.dart';
 import 'package:movie_api_demo/movie.dart';
@@ -51,7 +53,24 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.amber,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              "IMADb",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 25,
+                fontWeight: FontWeight.w900,
+                fontFamily: 'Roboto',
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          backgroundColor: Colors.black,
         ),
         body: Center(
           child: ListView.builder(
