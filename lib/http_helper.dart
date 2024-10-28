@@ -26,16 +26,19 @@ class httpHelper {
   }
 
   Future<List<Movie>> searchMovies(String query) async {
-    final url = "$urlBase$urlUpcoming$apiKey$language&query=$query";
-    http.Response result = await http.get(Uri.parse(url));
+    // final url = "$urlBase$urlUpcoming$apiKey$language&query=$query";
+    // http.Response result = await http.get(Uri.parse(url));
 
-    if (result.statusCode == 200) {
-      final Map<String, dynamic> jsonResponse = json.decode(result.body);
-      final List moviesMap = jsonResponse['results'];
-      List<Movie> movies = moviesMap.map((json) => Movie.fromJson(json)).toList();
-      return movies;
-    } else {
-      return [];
-    }
+    // if (result.statusCode == 200) {
+    //   final Map<String, dynamic> jsonResponse = json.decode(result.body);
+    //   final List moviesMap = jsonResponse['results'];
+    //   List<Movie> movies = moviesMap.map((json) => Movie.fromJson(json)).toList();
+    //   return movies;
+    // } else {
+    //   return [];
+    // }
+    final List<Movie> upcomingMovies = await getUpcoming();
+    final List<Movie> searchResult = upcomingMovies.where((movie) => movie.title.toLowerCase().contains(query.toLowerCase())).toList();
+    return searchResult;
   }
 }

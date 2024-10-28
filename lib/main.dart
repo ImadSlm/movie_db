@@ -74,65 +74,90 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.black,
               fontSize: 30,
               fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
+              letterSpacing: 1,
             ),
           ),
         ),
         backgroundColor: Colors.black,
       ),
-      body: moviesHomePageBody(),
+      body: moviesHomePageBody(context),
     );
   }
 }
 
-Center moviesHomePageBody() {
+Center moviesHomePageBody(context) {
+  final TextEditingController searchController = TextEditingController();
+  
   return Center(
-    child: BlocBuilder<MovieBloc, MovieState>(
-      builder: (context, state) {
-        if (state is MovieLoading) {
-          return CircularProgressIndicator(
-            color: Colors.amber,
-            strokeWidth: 6,
-          );
-        } else if (state is MovieLoaded) {
-          return ListView.builder(
-            itemCount: state.movies.length,
-            itemBuilder: (context, index) {
-              final movie = state.movies[index];
-              return ListTile(
-                title: Text(
-                  movie.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Row(
-                  children: [
-                    Text('Sortie : ${movie.releaseDate}'),
-                    SizedBox(width: 40),
-                    Text(movie.voteAverage.toStringAsFixed(1)),
-                    Icon(Icons.star, color: Colors.amber),
-                  ],
-                ),
-                leading: Image.network(
-                  movie.posterPath,
-                  width: 100,
-                  height: 300,
-                ),
-                trailing: Icon(Icons.arrow_forward_ios_rounded),
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MovieDetail(movie: movie),
-                  ),
-                ),
-              );
+    child: Column(
+      children: [
+        TextField(
+          controller: searchController,
+          decoration: InputDecoration(
+            hintText: 'Rechercher un film',
+            suffixIcon: IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                final query = searchController.text;
+                if (query.isNotEmpty) {
+                  BlocProvider.of<MovieBloc>(context).add(SearchMovies(query));
+                }else{
+                  BlocProvider.of<MovieBloc>(context).add(FetchUpcomingMovies());
+                }
+              },
+            ),
+          ),
+        ),
+        Expanded(
+          child: BlocBuilder<MovieBloc, MovieState>(
+            builder: (context, state) {
+              if (state is MovieLoading) {
+                return CircularProgressIndicator(
+                  color: Colors.amber,
+                  strokeWidth: 6,
+                );
+              } else if (state is MovieLoaded) {
+                return ListView.builder(
+                  itemCount: state.movies.length,
+                  itemBuilder: (context, index) {
+                    final movie = state.movies[index];
+                    return ListTile(
+                      title: Text(
+                        movie.title,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Row(
+                        children: [
+                          Text('Sortie : ${movie.releaseDate}'),
+                          SizedBox(width: 40),
+                          Text(movie.voteAverage.toStringAsFixed(1)),
+                          Icon(Icons.star, color: Colors.amber),
+                        ],
+                      ),
+                      leading: Image.network(
+                        movie.posterPath,
+                        width: 100,
+                        height: 300,
+                      ),
+                      trailing: Icon(Icons.arrow_forward_ios_rounded),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MovieDetail(movie: movie),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else if (state is MovieError) {
+                return Center(child: Text('Failed to fetch movies: ${state.errmsg}'));
+              } else {
+                return Center(child: Text('Unknown state'));
+              }
             },
-          );
-        } else if (state is MovieError) {
-          return Center(child: Text('Failed to fetch movies: ${state.errmsg}'));
-        } else {
-          return Center(child: Text('Unknown state'));
-        }
-      },
+          ),
+        ),
+      ],
     ),
   );
 }
