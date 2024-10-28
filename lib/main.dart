@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_function_type_syntax_for_parameters
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,14 +84,24 @@ class _MyHomePageState extends State<MyHomePage> {
               letterSpacing: 1,
             ),
           ),
+          
         ),
         backgroundColor: Colors.black,
         actions: [
+          Text(
+            "Absolute Cinema",
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: "Roboto",
+              fontSize: 20,
+            ),
+          ),
+          SizedBox(width: 80),
           Padding(
             padding: const EdgeInsets.only(right: 30),
             child: IconButton(
               icon: Icon(Icons.search),
-              color: Colors.white,
+              color: isSearching? Colors.amber : Colors.white,
               onPressed: toggleSearch,
             ),
           ),
@@ -173,19 +183,22 @@ Center moviesHomePageBody(context, isSearching) {
 
 TextField searchText(TextEditingController searchController, void submitSearch(String query)) {
   return TextField(
-        controller: searchController,
-        decoration: InputDecoration(
-          hintText: 'Rechercher un film',
-          suffixIcon: IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              final query = searchController.text;
-              submitSearch(query);
-            },
-          ),
-        ),
-        onSubmitted: (query) {
+    controller: searchController,
+    decoration: InputDecoration(
+      hintText: 'Rechercher un film',
+      suffixIcon: IconButton(
+        icon: Icon(Icons.send),
+        onPressed: () {
+          final query = searchController.text;
           submitSearch(query);
         },
-      );
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(8)),
+      ),
+    ),
+    onSubmitted: (query) {
+      submitSearch(query);
+    },
+  );
 }
