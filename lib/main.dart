@@ -47,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   httpHelper httphelper = httpHelper();
   List<Movie> moviesList = [];
   String imagebaseUrl = "https://image.tmdb.org/t/p/w92/";
+  bool isSearching = false;
 
   @override
   void initState() {
@@ -55,6 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         this.moviesList = moviesList;
       });
+    });
+  }
+
+  void toggleSearch() {
+    setState(() {
+      isSearching = !isSearching;
     });
   }
 
@@ -79,35 +86,37 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         backgroundColor: Colors.black,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: IconButton(
+              icon: Icon(Icons.search),
+              color: Colors.white,
+              onPressed: toggleSearch,
+            ),
+          ),
+        ],
       ),
-      body: moviesHomePageBody(context),
+      body: moviesHomePageBody(context, isSearching),
     );
   }
 }
 
-Center moviesHomePageBody(context) {
+Center moviesHomePageBody(context, isSearching) {
   final TextEditingController searchController = TextEditingController();
-  
+
+  void submitSearch(String query) {
+    if (query.isNotEmpty) {
+      BlocProvider.of<MovieBloc>(context).add(SearchMovies(query));
+    } else {
+      BlocProvider.of<MovieBloc>(context).add(FetchUpcomingMovies());
+    }
+  }
+
   return Center(
     child: Column(
       children: [
-        TextField(
-          controller: searchController,
-          decoration: InputDecoration(
-            hintText: 'Rechercher un film',
-            suffixIcon: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                final query = searchController.text;
-                if (query.isNotEmpty) {
-                  BlocProvider.of<MovieBloc>(context).add(SearchMovies(query));
-                }else{
-                  BlocProvider.of<MovieBloc>(context).add(FetchUpcomingMovies());
-                }
-              },
-            ),
-          ),
-        ),
+        isSearching ? searchText(searchController, submitSearch) : SizedBox(height: 0),
         Expanded(
           child: BlocBuilder<MovieBloc, MovieState>(
             builder: (context, state) {
@@ -160,4 +169,23 @@ Center moviesHomePageBody(context) {
       ],
     ),
   );
+}
+
+TextField searchText(TextEditingController searchController, void submitSearch(String query)) {
+  return TextField(
+        controller: searchController,
+        decoration: InputDecoration(
+          hintText: 'Rechercher un film',
+          suffixIcon: IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              final query = searchController.text;
+              submitSearch(query);
+            },
+          ),
+        ),
+        onSubmitted: (query) {
+          submitSearch(query);
+        },
+      );
 }
