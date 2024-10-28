@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:movie_api_demo/movie.dart';
 
@@ -14,6 +16,7 @@ class MovieDetail extends StatelessWidget {
           movie.title,
           style: TextStyle(
             color: Colors.black,
+            fontWeight: FontWeight.bold 
           ),
         ),
       ),

@@ -1,9 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_api_demo/bloc/movie_bloc.dart';
+import 'package:movie_api_demo/bloc/movie_event.dart';
+import 'package:movie_api_demo/bloc/movie_state.dart';
 import 'package:movie_api_demo/http_helper.dart';
 import 'package:movie_api_demo/movie.dart';
 import 'package:movie_api_demo/movie_detail.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +26,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Movie DB'),
+      // home: const MyHomePage(title: 'Movie DB'),
+      home: BlocProvider(
+        create: (context) => MovieBloc()..add(FetchUpcomingMovies()),
+        child: MyHomePage(title: 'Movie DB'),
+      ),
     );
   }
 }
@@ -52,37 +61,54 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              "IMADb",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 25,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Roboto',
-                letterSpacing: 0.5,
-              ),
+      appBar: AppBar(
+        title: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          decoration: BoxDecoration(
+            color: Colors.amber,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Text(
+            "IMADb",
+            style: GoogleFonts.anton(
+              color: Colors.black,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
             ),
           ),
-          backgroundColor: Colors.black,
         ),
-        body: Center(
-          child: ListView.builder(
-            itemCount: moviesList.length,
+        backgroundColor: Colors.black,
+      ),
+      body: moviesHomePageBody(),
+    );
+  }
+}
+
+Center moviesHomePageBody() {
+  return Center(
+    child: BlocBuilder<MovieBloc, MovieState>(
+      builder: (context, state) {
+        if (state is MovieLoading) {
+          return CircularProgressIndicator(
+            color: Colors.amber,
+            strokeWidth: 6,
+          );
+        } else if (state is MovieLoaded) {
+          return ListView.builder(
+            itemCount: state.movies.length,
             itemBuilder: (context, index) {
-              Movie movie = moviesList[index];
+              final movie = state.movies[index];
               return ListTile(
-                title: Text(movie.title),
+                title: Text(
+                  movie.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: Text('Sortie : ${movie.releaseDate}'),
                 leading: Image.network(
                   movie.posterPath,
                   width: 100,
+                  height: 300,
                 ),
                 onTap: () => Navigator.push(
                   context,
@@ -92,7 +118,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               );
             },
-          ),
-        ));
-  }
+          );
+        } else if (state is MovieError) {
+          return Center(child: Text('Failed to fetch movies: ${state.errmsg}'));
+        } else {
+          return Center(child: Text('Unknown state'));
+        }
+      },
+    ),
+  );
 }
