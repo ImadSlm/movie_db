@@ -104,12 +104,20 @@ Center moviesHomePageBody() {
                   movie.title,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text('Sortie : ${movie.releaseDate}'),
+                subtitle: Row(
+                  children: [
+                    Text('Sortie : ${movie.releaseDate}'),
+                    SizedBox(width: 40),
+                    Text(movie.voteAverage.toStringAsFixed(1)),
+                    Icon(Icons.star, color: Colors.amber),
+                  ],
+                ),
                 leading: Image.network(
                   movie.posterPath,
                   width: 100,
                   height: 300,
                 ),
+                trailing: Icon(Icons.arrow_forward_ios_rounded),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(

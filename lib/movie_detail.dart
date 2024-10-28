@@ -14,10 +14,7 @@ class MovieDetail extends StatelessWidget {
         backgroundColor: Colors.amber,
         title: Text(
           movie.title,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold 
-          ),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -37,7 +34,20 @@ class MovieDetail extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Center(child: Text("Sortie le : ${movie.releaseDate}", style: const TextStyle(fontSize: 20))),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Sortie le : ${movie.releaseDate}", style: const TextStyle(fontSize: 20)),
+                    const SizedBox(width: 70),
+                    Text(
+                      movie.voteAverage.toStringAsFixed(1),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Icon(Icons.star, color: Colors.amber),
+                  ],
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
