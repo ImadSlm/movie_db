@@ -200,5 +200,8 @@ TextField searchText(TextEditingController searchController, void submitSearch(S
     onSubmitted: (query) {
       submitSearch(query);
     },
+    onChanged: (query) {
+      submitSearch(query);
+    },
   );
 }
