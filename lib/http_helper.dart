@@ -21,7 +21,7 @@ class httpHelper {
       List<Movie> movies = moviesMap.map((json) => Movie.fromJson(json)).toList();
       return movies;
     } else {
-      return [];
+      throw Exception('Failed to load movies');
     }
   }
 

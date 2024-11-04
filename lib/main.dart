@@ -169,7 +169,7 @@ Center moviesHomePageBody(context, isSearching) {
                   },
                 );
               } else if (state is MovieError) {
-                return Center(child: Text('Failed to fetch movies: ${state.errmsg}'));
+                return Center(child: Text('Failed to fetch movies: ${state.errmsg}', style: TextStyle(color: Colors.red)));
               } else {
                 return Center(child: Text('Unknown state'));
               }
