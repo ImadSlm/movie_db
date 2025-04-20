@@ -24,7 +24,7 @@ jobs:
         flutter-version: '3.13.0'
 
     # Ajouter la clé API dans un fichier .env
-    - name: Set up .env filerun: mkdir -p assets
+    - name: Set up .env
       run: mkdir -p assets && echo "API_KEY=${{ secrets.API_KEY }}" > assets/.env
 
     # Installer les dépendances
