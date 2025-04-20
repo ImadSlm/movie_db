@@ -1,0 +1,7 @@
+build/
+.dockerignore
+Dockerfile
+docker-compose.yml
+.pub-cache/
+.flutter-plugins
+.flutter-plugins-dependencies
