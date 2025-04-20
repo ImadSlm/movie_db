@@ -35,6 +35,7 @@ dependencies:
   flutter_bloc: ^8.1.6
   google_fonts: ^6.2.1
   http: ^1.2.2
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_lints: ^4.0.0
@@ -45,6 +46,8 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/.env
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

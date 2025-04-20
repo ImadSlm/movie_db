@@ -1,17 +1,22 @@
 // ignore_for_file: camel_case_types
 
-import 'dart:convert';
-
+import 'dart:convert'; 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_api_demo/movie.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class httpHelper {
   final String urlBase = "https://api.themoviedb.org/3/movie";
   final String urlUpcoming = "/upcoming?";
-  final String apiKey = "api_key=07c2ece398332e13310af832a90646fc";
+  final String apiKey = "api_key=${dotenv.env['API_KEY']}";
   final String language = "&language=fr-FR";
 
   Future<List<Movie>> getUpcoming() async {
+    if (dotenv.env['API_KEY'] == null || dotenv.env['API_KEY']!.isEmpty) {
+      throw Exception('API_KEY is missing in the .env file');
+    }
+    
     final url = "$urlBase$urlUpcoming$apiKey$language";
     http.Response result = await http.get(Uri.parse(url));
 
