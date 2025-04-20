@@ -1,0 +1,36 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Vérifier le code source
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Configurer Flutter
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.13.0'
+
+    # Ajouter la clé API dans un fichier .env
+    - name: Set up .env file
+      run: echo "API_KEY=${{ secrets.API_KEY }}" > assets/.env
+
+    # Installer les dépendances
+    - name: Install dependencies
+      run: flutter pub get
+
+    # Construire l'application Flutter pour le web
+    - name: Build Flutter web
+      run: flutter build web
